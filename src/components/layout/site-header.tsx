@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Flame, Menu, Phone, X } from 'lucide-react';
+import { useEffect, useId, useState } from 'react';
+import { Clock, Flame, Menu, Phone, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
 import { cn } from '@/lib/cn';
@@ -12,16 +12,20 @@ type Props = {
   locale: string;
   companyName: string;
   hours: string;
-  phone: string | null;
+  phones: string[];
   whatsappUrl: string | null;
 };
 
-export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: Props) {
+const focusRing =
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fire-600';
+
+export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: Props) {
   const t = useTranslations('nav');
   const tc = useTranslations('common');
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const mobileNavId = useId();
 
   const cleanPath = pathname.replace(/\/+$/, '') || '/';
 
@@ -39,25 +43,78 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
 
   const closeMenu = () => setMenuOpen(false);
 
+  // اقفل المنيو لما الصفحة تتغير
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // اقفل المنيو بـ Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
   const switchLocale = () => {
     const query = typeof window !== 'undefined' ? window.location.search : '';
     router.push(`${cleanPath}${query}`, { locale: locale === 'ar' ? 'en' : 'ar' });
   };
 
+  const hasContacts = phones.length > 0 || Boolean(whatsappUrl);
+  const hasTopBar = Boolean(hours) || hasContacts;
+
   return (
-    <header className="sticky top-0 z-40">
-      {(hours || phone) && (
+    <header className="sticky top-0 z-40 shadow-sm">
+      {hasTopBar && (
         <div className="bg-navy-950 text-inverse">
-          <div className="container-page flex h-9 items-center justify-between gap-4 text-xs">
-            {hours && <span className="truncate">{hours}</span>}
-            {phone && (
-              <a
-                href={telLink(phone)}
-                dir="ltr"
-                className="phone shrink-0 transition-colors hover:text-white"
-              >
-                {phone}
-              </a>
+          <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-1.5 text-xs">
+            {hours && (
+              <span className="flex items-center gap-1.5 opacity-90">
+                <Clock aria-hidden="true" className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} />
+                {hours}
+              </span>
+            )}
+
+            {hasContacts && (
+              <ul className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                {phones.map((phone) => (
+                  <li key={phone}>
+                    <a
+                      href={telLink(phone)}
+                      dir="ltr"
+                      className={cn(
+                        'phone inline-flex items-center gap-1.5 font-semibold transition-colors hover:text-white',
+                        'focus-visible:outline-white',
+                        focusRing,
+                      )}
+                    >
+                      <Phone aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.75} />
+                      {phone}
+                    </a>
+                  </li>
+                ))}
+
+                {whatsappUrl && (
+                  <li>
+                    <a
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        'inline-flex items-center gap-1.5 font-semibold transition-colors hover:text-white',
+                        'focus-visible:outline-white',
+                        focusRing,
+                      )}
+                    >
+                      <FaWhatsapp aria-hidden="true" className="h-3.5 w-3.5" />
+                      {tc('whatsapp')}
+                    </a>
+                  </li>
+                )}
+              </ul>
             )}
           </div>
         </div>
@@ -67,13 +124,13 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
         <div className="container-page flex h-16 items-center gap-3 lg:h-[72px] lg:gap-6">
           <Link
             href="/"
-            className="group flex shrink-0 items-center gap-2.5"
+            className={cn('group flex shrink-0 items-center gap-2.5 rounded-md', focusRing)}
             aria-label={companyName}
           >
-            <span className="bg-navy-900 text-fire-600 flex h-9 w-9 items-center justify-center rounded-md">
+            <span className="bg-navy-900 text-fire-600 flex h-9 w-9 items-center justify-center rounded-md transition-transform group-hover:scale-105">
               <Flame aria-hidden="true" className="h-5 w-5" strokeWidth={1.75} />
             </span>
-            <span className="max-w-[42vw] truncate text-lg font-extrabold sm:max-w-none">
+            <span className="max-w-[48vw] truncate text-lg font-extrabold sm:max-w-none">
               {companyName}
             </span>
           </Link>
@@ -84,10 +141,10 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={closeMenu}
                     aria-current={isActive(item.href) ? 'page' : undefined}
                     className={cn(
                       'rounded-md px-3 py-2 text-sm font-semibold transition-colors',
+                      focusRing,
                       isActive(item.href)
                         ? 'bg-fire-50 text-fire-700'
                         : 'text-muted hover:text-text hover:bg-surface-alt',
@@ -105,41 +162,26 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
               type="button"
               onClick={switchLocale}
               aria-label={t('switchLanguage')}
-              className="border-border hover:bg-surface-alt hidden h-10 items-center rounded-md border px-3 text-sm font-bold transition-colors sm:inline-flex"
+              className={cn(
+                'border-border hover:bg-surface-alt inline-flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-bold transition-colors',
+                focusRing,
+              )}
             >
-              {locale === 'ar' ? 'EN' : t('switchLanguage')}
+              <span lang={locale === 'ar' ? 'en' : 'ar'} aria-hidden="true">
+                {locale === 'ar' ? 'EN' : 'ع'}
+              </span>
             </button>
-
-         {/*    {phone && (
-              <a
-                href={telLink(phone)}
-                className="border-border hover:bg-surface-alt hidden h-10 items-center gap-2 rounded-md border px-3 text-sm font-bold transition-colors md:inline-flex"
-              >
-                <Phone aria-hidden="true" className="h-4 w-4" strokeWidth={1.75} />
-                <span className="phone" dir="ltr">
-                  {phone}
-                </span>
-              </a>
-            )}
-
-            {whatsappUrl && (
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-whatsapp hover:bg-navy-950 inline-flex h-10 items-center gap-2 rounded-md px-3 text-sm font-bold text-white transition-colors sm:px-4"
-              >
-                <FaWhatsapp aria-hidden="true" className="h-4 w-4" />
-                <span className="hidden sm:inline">{tc('whatsapp')}</span>
-              </a>
-            )} */}
 
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
               aria-expanded={menuOpen}
+              aria-controls={mobileNavId}
               aria-label={menuOpen ? t('closeMenu') : t('menu')}
-              className="border-border hover:bg-surface-alt inline-flex h-10 w-10 items-center justify-center rounded-md border transition-colors lg:hidden"
+              className={cn(
+                'border-border hover:bg-surface-alt inline-flex h-10 w-10 items-center justify-center rounded-md border transition-colors lg:hidden',
+                focusRing,
+              )}
             >
               {menuOpen ? (
                 <X aria-hidden="true" className="h-5 w-5" />
@@ -151,8 +193,12 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
         </div>
 
         {menuOpen && (
-          <nav aria-label={t('menu')} className="border-border border-t lg:hidden">
-            <ul className="container-page flex flex-col py-2">
+          <nav
+            id={mobileNavId}
+            aria-label={t('menu')}
+            className="border-border bg-surface max-h-[calc(100dvh-8rem)] overflow-y-auto border-t lg:hidden"
+          >
+            <ul className="container-page flex flex-col gap-1 py-2">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -161,6 +207,7 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
                     aria-current={isActive(item.href) ? 'page' : undefined}
                     className={cn(
                       'block rounded-md px-3 py-3 font-semibold transition-colors',
+                      focusRing,
                       isActive(item.href)
                         ? 'bg-fire-50 text-fire-700'
                         : 'text-muted hover:bg-surface-alt',
@@ -170,18 +217,6 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
                   </Link>
                 </li>
               ))}
-              <li className="px-3 pt-1 pb-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeMenu();
-                    switchLocale();
-                  }}
-                  className="border-border hover:bg-surface-alt rounded-md border px-3 py-2 text-sm font-bold transition-colors"
-                >
-                  {t('switchLanguage')}
-                </button>
-              </li>
             </ul>
           </nav>
         )}

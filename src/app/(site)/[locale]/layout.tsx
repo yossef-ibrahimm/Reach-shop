@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { FloatingWhatsApp } from '@/components/layout/floating-whatsapp';
@@ -38,14 +38,24 @@ export default async function SiteRootLayout({ children, params }: LayoutProps) 
     notFound();
   }
 
-  const messages = await getMessages();
-  const site = await getSiteData();
+  // بيخلّي next-intl يعرف الـ locale من غير ما يستخدم headers()،
+  // وده شرط عشان الصفحات تتعمل static rendering مع generateStaticParams
+  setRequestLocale(locale);
 
-  const t = await getTranslations({ locale, namespace: 'common' });
-  const greeting = t('waGreeting');
+  // التلات طلبات مش معتمدين على بعض، فنشغّلهم مع بعض بدل ورا بعض
+  const [messages, site, t] = await Promise.all([
+    getMessages({ locale }),
+    getSiteData(),
+    getTranslations({ locale, namespace: 'common' }),
+  ]);
+
   const waNumber = whatsappNumber(site);
-  const whatsappUrl = waNumber ? waLink(waNumber, greeting) : null;
-  const primaryPhone = site.phones[0]?.number ?? null;
+  const whatsappUrl = waNumber ? waLink(waNumber, t('waGreeting')) : null;
+
+  // كل الأرقام، من غير الفاضي ومن غير التكرار
+  const phones = Array.from(
+    new Set(site.phones.map((p) => p.number).filter((n): n is string => Boolean(n))),
+  );
 
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={fontVariables}>
@@ -61,7 +71,7 @@ export default async function SiteRootLayout({ children, params }: LayoutProps) 
             locale={locale}
             companyName={setting(site, 'company_name', locale)}
             hours={setting(site, 'hours', locale)}
-            phone={primaryPhone}
+            phones={phones}
             whatsappUrl={whatsappUrl}
           />
           <div className="flex-1">{children}</div>
