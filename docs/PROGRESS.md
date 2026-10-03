@@ -96,3 +96,20 @@ Current phase: **2 — Public site — DONE (2026-10-02)**, awaiting approval to
 - `npm run serve` route matrix re-run: `/ar/`+`/en/` (lang/dir correct), products listing/detail (both locales), about, contact, admin (noindex), query-string listing URL → 200; unknown path → HTTP 404; `wa.me` + `dir="ltr"` phones present; hero marker parsed; spec table present on `hst-economy-4-zone-panel`, absent on `hst-mcp`; certificates/projects sections hidden (0 rows).
 - `psql -f supabase/tests/rls_verify.sql` → **ALL RLS CHECKS PASSED**, fixtures restored (17/8/7/65, 2 phones, 3 socials, 17 settings, 0 images/certificates/projects).
 - Secret scan: no `service_role`/tokens in tracked files; `.env.local` git-ignored.
+
+### 2026-10-03 — Audit pass: responsive + WCAG ✅
+**Built**
+- `src/lib/use-dialog.ts` — shared focus-in / Tab-trap / scroll-lock / focus-restore hook (D-042), used by `products-explorer` (filter drawer) and `lightbox`.
+- Fixes: `grid-cols-1` on 18 grids (D-040), global focus outline + `::placeholder` (D-041), absolutely positioned mobile menu + outside-click close (D-045), 44px controls / ≥24px inline links (D-043), 16px fields (D-044), specs table `overflow-x-auto`, safe-area insets on floating WhatsApp + toast, `rtl:origin-right` on the product-card accent bar, lightbox `85dvh` + RTL arrow keys.
+- Also fixed a pre-existing lint error in `site-header` (`react-hooks/set-state-in-effect` → render-phase adjustment, same pattern as the explorer).
+
+**Verified** (Chrome headless CDP against the static `out/` build, no npm deps added)
+- `npm run lint` / `npm run typecheck` / `npm run build` → all green; 146 static pages.
+- Viewport matrix 8 pages × 320/375/414/768/1024/1280 (48 combos): **0 horizontal scroll, 0 layout errors, 0 undersized inputs**; 46/48 fully clean, the 2 remaining only flag the 16px checkbox *inside* its 32px label (D-043).
+- Before → after at 320px: `/ar/` scrollWidth 369 → 320, `/en/` 323 → 320.
+- Interaction tests: mobile menu open no longer shifts content (mainTop 121 → 121, was 116 → 350); filter drawer focuses its close button, locks body scroll, keeps Tab inside, restores focus; focus ring computed as `2px solid rgb(215,38,30)` with no radius override.
+- Lightbox verified through a temporary static harness page (removed afterwards, `out/` rebuilt clean): focus-in, scroll lock, Escape close, focus restore, and **RTL arrow mirroring** (AR: ArrowRight → previous; EN: ArrowRight → next).
+
+**Not verified**: the authenticated admin UI (no session in the test harness) — code-reviewed only; certificates/projects galleries unreachable because those tables are empty (no invented data, D-005).
+
+**Decisions**: D-040–D-045 added. **Open questions**: D-043 strict-44px?, plus two pre-existing files failing `format:check` that were left untouched: `src/app/(site)/[locale]/layout.tsx`, `start.md`.

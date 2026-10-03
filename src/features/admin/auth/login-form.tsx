@@ -73,7 +73,7 @@ export function LoginForm() {
   };
 
   const input =
-    'border-border bg-surface w-full rounded-md border px-3 py-2.5 text-sm outline-none focus:border-navy-700';
+    'border-border bg-surface w-full rounded-md border px-3 py-2.5 text-base focus:border-navy-700';
   const label = 'mb-1 block text-sm font-bold';
 
   return (
@@ -148,7 +148,7 @@ export function LoginForm() {
 
       <a
         href={`${basePath}/`}
-        className="text-muted hover:text-text block text-center text-sm font-bold underline-offset-4 hover:underline"
+        className="text-muted hover:text-text block py-1 text-center text-sm font-bold underline-offset-4 hover:underline"
       >
         {t('backToSite')}
       </a>

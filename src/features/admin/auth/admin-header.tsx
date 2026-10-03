@@ -18,7 +18,7 @@ export function AdminHeader() {
   };
 
   const navLink =
-    'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-bold transition-colors hover:bg-surface-alt';
+    'inline-flex items-center gap-1.5 rounded-md px-3 py-2.5 text-sm font-bold transition-colors hover:bg-surface-alt';
   const icon = 'size-4 shrink-0';
 
   return (
@@ -44,7 +44,7 @@ export function AdminHeader() {
           href={`${basePath}/`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-muted hover:bg-surface-alt inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-bold transition-colors"
+          className="text-muted hover:bg-surface-alt inline-flex items-center gap-1.5 rounded-md px-3 py-2.5 text-sm font-bold transition-colors"
         >
           <ExternalLink aria-hidden="true" className={icon} />
           {t('header.viewSite')}
@@ -52,7 +52,7 @@ export function AdminHeader() {
         <button
           type="button"
           onClick={() => void logout()}
-          className="text-fire-700 bg-fire-50 hover:bg-fire-600/15 inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-bold transition-colors"
+          className="text-fire-700 bg-fire-50 hover:bg-fire-600/15 inline-flex items-center gap-1.5 rounded-md px-3 py-2.5 text-sm font-bold transition-colors"
         >
           <LogOut aria-hidden="true" className={icon} />
           {t('header.logout')}

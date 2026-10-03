@@ -15,7 +15,7 @@ export function FloatingWhatsApp({ href, label }: Props) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="bg-whatsapp hover:bg-navy-950 fixed end-6 bottom-6 z-30 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-150 hover:scale-105"
+      className="bg-whatsapp hover:bg-navy-950 fixed end-6 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-30 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-150 hover:scale-105"
     >
       <FaWhatsapp aria-hidden="true" className="h-7 w-7" />
     </a>

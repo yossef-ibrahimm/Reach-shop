@@ -21,6 +21,7 @@ import type {
   SpecDefinition,
 } from '@/lib/products/types';
 import { ProductCard } from '@/components/ui/product-card';
+import { useDialogBehavior } from '@/lib/use-dialog';
 
 const PAGE_SIZE = 24;
 const SYSTEM_VALUES = ['conventional', 'addressable'] as const;
@@ -385,6 +386,8 @@ export function ProductsExplorer({
   /* --------------------------------------------------------------- drawer -- */
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogBehavior(drawerOpen, dialogRef);
   useEffect(() => {
     if (!drawerOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -425,7 +428,7 @@ export function ProductsExplorer({
         />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="hidden lg:block">
           <div className="border-border bg-surface sticky top-28 rounded-md border p-4 shadow-sm">
             {panel}
@@ -437,7 +440,7 @@ export function ProductsExplorer({
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="border-border bg-surface hover:bg-surface-alt inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-bold transition-colors lg:hidden"
+              className="border-border bg-surface hover:bg-surface-alt inline-flex h-11 items-center gap-2 rounded-md border px-3 text-sm font-bold transition-colors lg:hidden"
             >
               <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
               {tc('filters')}
@@ -455,7 +458,7 @@ export function ProductsExplorer({
               <select
                 value={state.sort}
                 onChange={(event) => applyState({ ...state, sort: event.target.value as SortKey })}
-                className="border-border bg-surface rounded-md border px-3 py-2 text-sm font-bold"
+                className="border-border bg-surface rounded-md border px-3 py-2 text-base font-bold"
               >
                 <option value="featured">{t('sortFeatured')}</option>
                 <option value="name">{t('sortName')}</option>
@@ -475,7 +478,7 @@ export function ProductsExplorer({
                     type="button"
                     onClick={chip.onRemove}
                     aria-label={tc('removeFilter', { name: chip.label })}
-                    className="hover:bg-fire-600 rounded-full p-0.5 transition-colors hover:text-white"
+                    className="hover:bg-fire-600 flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:text-white"
                   >
                     <X aria-hidden="true" className="h-3.5 w-3.5" />
                   </button>
@@ -484,7 +487,7 @@ export function ProductsExplorer({
               <button
                 type="button"
                 onClick={handleClear}
-                className="text-fire-700 text-xs font-bold underline underline-offset-2"
+                className="text-fire-700 inline-flex min-h-6 items-center py-1 text-xs font-bold underline underline-offset-2"
               >
                 {tc('clearFilters')}
               </button>
@@ -548,9 +551,11 @@ export function ProductsExplorer({
             aria-hidden="true"
           />
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={t('filtersTitle')}
+            tabIndex={-1}
             className="bg-surface absolute inset-y-0 start-0 flex w-[min(340px,88vw)] flex-col shadow-xl"
           >
             <div className="border-border flex items-center justify-between border-b p-4">
@@ -559,7 +564,7 @@ export function ProductsExplorer({
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label={tc('close')}
-                className="hover:bg-surface-alt rounded-md p-2 transition-colors"
+                className="hover:bg-surface-alt flex h-11 w-11 items-center justify-center rounded-md transition-colors"
               >
                 <X aria-hidden="true" className="h-5 w-5" />
               </button>
@@ -611,7 +616,7 @@ function FiltersPanel({
         <button
           type="button"
           onClick={onClear}
-          className="text-fire-700 text-sm font-bold underline underline-offset-2"
+          className="text-fire-700 inline-flex min-h-6 items-center py-1 text-sm font-bold underline underline-offset-2"
         >
           {tc('clearFilters')}
         </button>

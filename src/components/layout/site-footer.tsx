@@ -36,7 +36,7 @@ export function SiteFooter({ site, locale }: Props) {
 
   return (
     <footer className="bg-navy-950 text-inverse mt-16">
-      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-page grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="flex items-center gap-2.5" aria-label={companyName}>
             <span className="bg-navy-800 text-fire-600 flex h-9 w-9 items-center justify-center rounded-md">
@@ -56,7 +56,7 @@ export function SiteFooter({ site, locale }: Props) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.platform}
-                      className="border-navy-700 flex h-10 w-10 items-center justify-center rounded-md border transition-colors hover:border-white hover:bg-white/10"
+                      className="border-navy-700 flex h-11 w-11 items-center justify-center rounded-md border transition-colors hover:border-white hover:bg-white/10"
                     >
                       <Icon aria-hidden="true" className="h-4 w-4" />
                     </a>
@@ -72,7 +72,10 @@ export function SiteFooter({ site, locale }: Props) {
           <ul className="mt-3 space-y-2 text-sm text-slate-400">
             {links.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="transition-colors hover:text-white">
+                <Link
+                  href={item.href}
+                  className="inline-block py-1 transition-colors hover:text-white"
+                >
                   {item.label}
                 </Link>
               </li>
@@ -89,7 +92,7 @@ export function SiteFooter({ site, locale }: Props) {
                 <a
                   href={telLink(number.number)}
                   dir="ltr"
-                  className="phone transition-colors hover:text-white"
+                  className="phone inline-block py-1 transition-colors hover:text-white"
                 >
                   {number.number}
                 </a>
@@ -114,7 +117,7 @@ export function SiteFooter({ site, locale }: Props) {
                   href={mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-colors hover:text-white"
+                  className="inline-block py-1 transition-colors hover:text-white"
                 >
                   {t('common.mapLink')}
                 </a>

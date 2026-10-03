@@ -54,7 +54,7 @@ export default async function HomePage() {
   const viewAllLink = (
     <Link
       href="/products/"
-      className="text-fire-700 hover:text-fire-600 inline-flex items-center gap-1.5 text-sm font-bold transition-colors"
+      className="text-fire-700 hover:text-fire-600 inline-flex items-center gap-1.5 py-1 text-sm font-bold transition-colors"
     >
       {tc('viewAll')}
       <ArrowRight aria-hidden="true" className="h-4 w-4 rtl:rotate-180" />
@@ -65,7 +65,7 @@ export default async function HomePage() {
     <main id="main-content">
       {/* Hero */}
       <section className="bg-navy-950 text-inverse">
-        <div className="container-page grid items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
+        <div className="container-page grid grid-cols-1 items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
           <div>
             {heroEyebrow && <p className="text-sm font-bold text-amber-500">{heroEyebrow}</p>}
             <h1 className="mt-3 text-[34px] leading-tight font-extrabold lg:text-5xl">
@@ -112,7 +112,7 @@ export default async function HomePage() {
           title={t('categoriesTitle')}
           action={viewAllLink}
         />
-        <ul className="mt-8 grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categoryCounts.map(({ category, count }) => (
             <li key={category.slug}>
               <CategoryTile
@@ -134,7 +134,7 @@ export default async function HomePage() {
               title={t('featuredTitle')}
               action={viewAllLink}
             />
-            <ul className="mt-8 grid list-none gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ul className="mt-8 grid list-none grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {featured.map((product) => (
                 <li key={product.id}>
                   <ProductCard product={product} specDefs={specDefs} />
@@ -181,7 +181,7 @@ export default async function HomePage() {
         <section className="bg-surface-alt">
           <div className="container-page py-16 lg:py-24">
             <SectionHeading eyebrow={t('whyEyebrow')} title={t('whyTitle')} />
-            <div className="mt-8 grid gap-6 sm:grid-cols-3">
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
               {whyItems.map((item) => (
                 <article
                   key={item.title}
@@ -211,7 +211,7 @@ export default async function HomePage() {
         <section className="bg-surface-alt">
           <div className="container-page py-16 lg:py-24">
             <SectionHeading eyebrow={t('projectsEyebrow')} title={t('projectsTitle')} />
-            <ul className="mt-8 grid list-none gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-8 grid list-none grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {projects.map((project) => (
                 <li
                   key={project.id}

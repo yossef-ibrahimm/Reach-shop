@@ -31,7 +31,7 @@ export function ContactDetails({ site, locale, greeting }: Props) {
   const message = greeting;
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       {site.phones.length > 0 && (
         <section className="border-border bg-surface rounded-md border p-5 shadow-sm sm:col-span-2">
           <h2 className="mb-3 flex items-center gap-2 font-bold">
@@ -50,14 +50,14 @@ export function ContactDetails({ site, locale, greeting }: Props) {
                 <a
                   href={telLink(number.number)}
                   dir="ltr"
-                  className="phone text-fire-700 font-bold"
+                  className="phone text-fire-700 inline-block py-1 font-bold"
                 >
                   {number.number}
                 </a>
                 <span className="ms-auto flex gap-2">
                   <a
                     href={telLink(number.number)}
-                    className="border-border bg-surface inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-bold transition-colors hover:bg-white"
+                    className="border-border bg-surface inline-flex h-11 items-center gap-1.5 rounded-md border px-3 text-xs font-bold transition-colors hover:bg-white"
                   >
                     <Phone aria-hidden="true" className="h-3.5 w-3.5" />
                     {t('common.call')}
@@ -66,7 +66,7 @@ export function ContactDetails({ site, locale, greeting }: Props) {
                     href={waLink(number.number, message)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-whatsapp hover:bg-navy-950 inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-bold text-white transition-colors"
+                    className="bg-whatsapp hover:bg-navy-950 inline-flex h-11 items-center gap-1.5 rounded-md px-3 text-xs font-bold text-white transition-colors"
                   >
                     <FaWhatsapp aria-hidden="true" className="h-3.5 w-3.5" />
                     {t('common.whatsapp')}
@@ -86,7 +86,7 @@ export function ContactDetails({ site, locale, greeting }: Props) {
           </h2>
           <a
             href={`mailto:${email}`}
-            className="hover:text-fire-600 font-medium transition-colors"
+            className="hover:text-fire-600 inline-block py-1 font-medium transition-colors"
             dir="ltr"
           >
             {email}
@@ -116,7 +116,7 @@ export function ContactDetails({ site, locale, greeting }: Props) {
               href={mapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-fire-700 hover:text-fire-600 mt-2 inline-block text-sm font-bold transition-colors"
+              className="text-fire-700 hover:text-fire-600 mt-2 inline-block py-1 text-sm font-bold transition-colors"
             >
               {t('common.mapLink')}
             </a>
@@ -137,7 +137,7 @@ export function ContactDetails({ site, locale, greeting }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.platform}
-                    className="border-border hover:bg-surface-alt flex h-10 w-10 items-center justify-center rounded-md border transition-colors"
+                    className="border-border hover:bg-surface-alt flex h-11 w-11 items-center justify-center rounded-md border transition-colors"
                   >
                     <Icon aria-hidden="true" className="h-4 w-4" />
                   </a>

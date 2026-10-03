@@ -278,7 +278,7 @@ export function ProductsList() {
   /* ----------------------------------------------------------------- view -- */
 
   const selectClass =
-    'border-border bg-surface rounded-md border px-3 py-2 text-sm outline-none focus:border-navy-700';
+    'border-border bg-surface rounded-md border px-3 py-2 text-base focus:border-navy-700';
   const labelClass = 'text-muted block text-xs font-bold';
   const actionButton =
     'inline-flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60';
@@ -306,7 +306,7 @@ export function ProductsList() {
         aria-label={t('filters.legend')}
         className="border-border bg-surface flex flex-col gap-3 border p-4 shadow-sm"
       >
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="relative sm:col-span-2 lg:col-span-1">
             <Search
               aria-hidden="true"

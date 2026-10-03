@@ -38,7 +38,7 @@ type LoadState =
   | { status: 'ready'; initial: Initial | null };
 
 const INPUT =
-  'border-border bg-surface w-full rounded-md border px-3 py-2.5 text-sm outline-none focus:border-navy-700 disabled:opacity-60';
+  'border-border bg-surface w-full rounded-md border px-3 py-2.5 text-base focus:border-navy-700 disabled:opacity-60';
 const LABEL = 'mb-1 block text-sm font-bold';
 const SECTION = 'border-border bg-surface flex flex-col gap-4 border p-4 shadow-sm';
 const SECTION_TITLE = 'text-sm font-extrabold';
@@ -493,7 +493,7 @@ function ProductFormInner({ mode, initial, lookups, reload }: InnerProps) {
           {fieldError(errors.slug?.message)}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="field-category_id" className={LABEL}>
               {t('fields.category')}
@@ -592,7 +592,7 @@ function ProductFormInner({ mode, initial, lookups, reload }: InnerProps) {
             {t('fields.specsNone')}
           </p>
         ) : (
-          <div key={categoryId} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div key={categoryId} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {definitions.map((definition) => {
               const error = errors.specs?.[definition.key]?.message;
               const registered = register(`specs.${definition.key}`);
@@ -657,7 +657,7 @@ function ProductFormInner({ mode, initial, lookups, reload }: InnerProps) {
           }}
         />
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <CatalogField
             label={t('fields.catalogAr')}
             field={catalogs.ar}
@@ -685,7 +685,7 @@ function ProductFormInner({ mode, initial, lookups, reload }: InnerProps) {
           {t('sections.publish')}
         </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="field-availability" className={LABEL}>
               {t('fields.availability')}

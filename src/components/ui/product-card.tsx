@@ -64,7 +64,7 @@ export function ProductCard({ product, specDefs = [] }: Props) {
     >
       <span
         aria-hidden="true"
-        className="bg-primary absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-150 group-hover:scale-x-100"
+        className="bg-primary absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-150 group-hover:scale-x-100 rtl:origin-right"
       />
       <div className="border-border flex aspect-[4/3] items-center justify-center border-b bg-white p-4">
         {cover ? (

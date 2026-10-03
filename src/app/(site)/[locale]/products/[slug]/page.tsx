@@ -149,7 +149,7 @@ export default async function ProductPage({ params }: PageProps) {
     <main id="main-content" className="container-page py-10">
       <Breadcrumbs items={crumbs} label={tProduct('breadcrumbLabel')} />
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
         <ProductGallery
           images={product.images}
           locale={locale}
@@ -188,7 +188,7 @@ export default async function ProductPage({ params }: PageProps) {
           {specRows.length > 0 && (
             <section className="mt-8">
               <h2 className="mb-3 text-lg font-bold">{tProduct('specsTitle')}</h2>
-              <div className="border-border overflow-hidden rounded-md border">
+              <div className="border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-sm">
                   <tbody>
                     {specRows.map((row, index) => (
@@ -243,7 +243,7 @@ export default async function ProductPage({ params }: PageProps) {
       {related.length > 0 && (
         <section className="mt-16">
           <h2 className="text-2xl font-bold">{tProduct('relatedTitle')}</h2>
-          <ul className="mt-6 grid list-none gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-6 grid list-none grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((item) => (
               <li key={item.id}>
                 <ProductCard product={item} specDefs={specDefs} />

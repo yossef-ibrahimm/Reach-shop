@@ -106,9 +106,13 @@
   }
 
   :focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgb(215 38 30 / 0.35);
-    border-radius: var(--radius-sm);
+    outline: 2px solid var(--color-fire-600);
+    outline-offset: 2px;
+  }
+
+  ::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
   }
 
   @media (prefers-reduced-motion: reduce) {

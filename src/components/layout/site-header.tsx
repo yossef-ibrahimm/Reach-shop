@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Clock, Flame, Menu, Phone, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
@@ -26,6 +26,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const mobileNavId = useId();
+  const headerRef = useRef<HTMLElement>(null);
 
   const cleanPath = pathname.replace(/\/+$/, '') || '/';
 
@@ -43,10 +44,11 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
 
   const closeMenu = () => setMenuOpen(false);
 
-  // اقفل المنيو لما الصفحة تتغير
-  useEffect(() => {
+  const [prevPath, setPrevPath] = useState(pathname);
+  if (prevPath !== pathname) {
+    setPrevPath(pathname);
     setMenuOpen(false);
-  }, [pathname]);
+  }
 
   // اقفل المنيو بـ Escape
   useEffect(() => {
@@ -58,6 +60,15 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [menuOpen]);
+
   const switchLocale = () => {
     const query = typeof window !== 'undefined' ? window.location.search : '';
     router.push(`${cleanPath}${query}`, { locale: locale === 'ar' ? 'en' : 'ar' });
@@ -67,7 +78,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
   const hasTopBar = Boolean(hours) || hasContacts;
 
   return (
-    <header className="sticky top-0 z-40 shadow-sm">
+    <header ref={headerRef} className="sticky top-0 z-40 shadow-sm">
       {hasTopBar && (
         <div className="bg-navy-950 text-inverse">
           <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-1.5 text-xs">
@@ -86,7 +97,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
                       href={telLink(phone)}
                       dir="ltr"
                       className={cn(
-                        'phone inline-flex items-center gap-1.5 font-semibold transition-colors hover:text-white',
+                        'phone inline-flex items-center gap-1.5 py-1 font-semibold transition-colors hover:text-white',
                         'focus-visible:outline-white',
                         focusRing,
                       )}
@@ -104,7 +115,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
                       target="_blank"
                       rel="noopener noreferrer"
                       className={cn(
-                        'inline-flex items-center gap-1.5 font-semibold transition-colors hover:text-white',
+                        'inline-flex items-center gap-1.5 py-1 font-semibold transition-colors hover:text-white',
                         'focus-visible:outline-white',
                         focusRing,
                       )}
@@ -120,7 +131,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
         </div>
       )}
 
-      <div className="border-border bg-surface border-b">
+      <div className="border-border bg-surface relative border-b">
         <div className="container-page flex h-16 items-center gap-3 lg:h-[72px] lg:gap-6">
           <Link
             href="/"
@@ -163,7 +174,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
               onClick={switchLocale}
               aria-label={t('switchLanguage')}
               className={cn(
-                'border-border hover:bg-surface-alt inline-flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-bold transition-colors',
+                'border-border hover:bg-surface-alt inline-flex h-11 min-w-11 items-center justify-center rounded-md border px-3 text-sm font-bold transition-colors',
                 focusRing,
               )}
             >
@@ -179,7 +190,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
               aria-controls={mobileNavId}
               aria-label={menuOpen ? t('closeMenu') : t('menu')}
               className={cn(
-                'border-border hover:bg-surface-alt inline-flex h-10 w-10 items-center justify-center rounded-md border transition-colors lg:hidden',
+                'border-border hover:bg-surface-alt inline-flex h-11 w-11 items-center justify-center rounded-md border transition-colors lg:hidden',
                 focusRing,
               )}
             >
@@ -196,7 +207,7 @@ export function SiteHeader({ locale, companyName, hours, phones, whatsappUrl }: 
           <nav
             id={mobileNavId}
             aria-label={t('menu')}
-            className="border-border bg-surface max-h-[calc(100dvh-8rem)] overflow-y-auto border-t lg:hidden"
+            className="border-border bg-surface absolute start-0 end-0 top-full z-50 max-h-[calc(100dvh-8rem)] overflow-y-auto border-t shadow-lg lg:hidden"
           >
             <ul className="container-page flex flex-col gap-1 py-2">
               {navItems.map((item) => (

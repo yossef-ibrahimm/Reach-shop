@@ -33,7 +33,7 @@ export default async function AboutPage() {
       <p className="text-fire-600 text-sm font-bold">{t('eyebrow')}</p>
       <h1 className="mt-1 text-3xl font-bold lg:text-4xl">{t('title')}</h1>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         {story && (
           <section className="border-border bg-surface rounded-md border p-6 shadow-sm">
             <h2 className="text-lg font-bold">{t('storyTitle')}</h2>
