@@ -110,7 +110,7 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
               {locale === 'ar' ? 'EN' : t('switchLanguage')}
             </button>
 
-            {phone && (
+         {/*    {phone && (
               <a
                 href={telLink(phone)}
                 className="border-border hover:bg-surface-alt hidden h-10 items-center gap-2 rounded-md border px-3 text-sm font-bold transition-colors md:inline-flex"
@@ -132,7 +132,7 @@ export function SiteHeader({ locale, companyName, hours, phone, whatsappUrl }: P
                 <FaWhatsapp aria-hidden="true" className="h-4 w-4" />
                 <span className="hidden sm:inline">{tc('whatsapp')}</span>
               </a>
-            )}
+            )} */}
 
             <button
               type="button"

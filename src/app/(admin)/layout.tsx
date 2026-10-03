@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { fontVariables } from '@/lib/fonts';
+import { ToastProvider } from '@/features/admin/ui/toast';
 import '@/app/globals.css';
 
 /**
@@ -11,13 +14,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
+  const messages = await getMessages();
+
   return (
     <html lang="ar" dir="rtl" className={fontVariables}>
       <body className="bg-paper min-h-screen">
-        <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-6 px-6 py-16">
-          {children}
-        </div>
+        <NextIntlClientProvider messages={messages}>
+          <ToastProvider>{children}</ToastProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
